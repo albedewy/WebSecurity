@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "AddUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+<script>
+    function SaveUser() {
+        var data = { dd: $("#txtUserName").val() };
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddUser", "Home")',
+            data: data,
+            //contentType: 'application/json; charset=utf-8',
+            //dataType: 'json',
+            success: function (result) {
+                alert('Successs');
+            },
+            complete: function () {
+                alert('complete');
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    }
+
+    function AjaxOnFailure(e) {
+        alert('Ajax Fail');
+    }
+</script>
+}
+<h2>AddUser</h2>
+
+<fieldset>
+    <legend>Html Form</legend>
+    @using (Html.BeginForm("AddUser", "Home"))
+    {
+        @Html.TextBox("userName")
+        <button type="submit">Save</button>
+    }
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Html Form with AntiForgeryToken Input</legend>
+    @using (Html.BeginForm("AddUser", "Home"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.TextBox("userName")
+        <button type="submit">Save</button>
+    }
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Html Form using BeginSecureForm</legend>
+    @using (Html.BeginSecureForm("AddUser", "Home"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.TextBox("userName")
+        <button type="submit">Save</button>
+    }
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Ajax Form with out AntiForgeryToken Input</legend>
+    @using (Ajax.BeginForm("AddUser", "Home", new AjaxOptions() { HttpMethod = "POST" }))
+    {
+        @Html.TextBox("userName")
+        <button type="submit">Save</button>
+    }
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Ajax Form using BeginSecureForm</legend>
+    @using (Ajax.BeginSecureForm("AddUser", "Home", new AjaxOptions() { HttpMethod = "POST" }))
+    {
+        @Html.TextBox("userName")
+        <button type="submit">Save</button>
+    }
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Jquery Ajax</legend>
+    @Html.TextBox("userName", null, new { @id = "txtUserName" })
+    <button type="button" onclick="SaveUser()">Save</button>
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Ajax Action Link</legend>
+    @Ajax.ActionLink("Submit User", "AddUser", "Home", new { userName = "Test" }, new AjaxOptions() { HttpMethod = "Post", OnFailure = "AjaxOnFailure" })
+</fieldset>
+
+<br />
+
+<fieldset>
+    <legend>Ajax Action Link</legend>
+    @Ajax.ActionLink("Submit User", "AddUser", new { userName = "Test" } , new AjaxOptions() { HttpMethod = "Post", OnFailure = "AjaxOnFailure" })
+</fieldset>
